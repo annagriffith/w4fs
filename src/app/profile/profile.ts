@@ -23,6 +23,7 @@ export class Profile implements OnInit {
   valid = false;
   successMessage = '';
 
+  // Load the current user's details from localStorage when the page opens.
   ngOnInit(): void {
     const storedUser = localStorage.getItem('currentUser');
     if (!storedUser) {
@@ -37,6 +38,7 @@ export class Profile implements OnInit {
     this.valid = currentUser.valid;
   }
 
+  // Save the edited profile back into localStorage.
   saveProfile(): void {
     const updatedUser: CurrentUser = {
       username: this.username,

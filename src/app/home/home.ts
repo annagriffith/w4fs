@@ -13,6 +13,7 @@ type CurrentUser = {
 export class Home implements OnInit {
   username = '';
 
+  // Read the currently logged-in user from localStorage to show their name.
   ngOnInit(): void {
     const storedUser = localStorage.getItem('currentUser');
     if (!storedUser) {

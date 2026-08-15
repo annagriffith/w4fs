@@ -22,6 +22,7 @@ export class Login implements OnInit {
   password = '';
   errorMessage = '';
 
+  // Backend endpoint for authentication.
   private readonly authUrl = 'http://localhost:3001/api/auth';
 
   constructor(
@@ -29,12 +30,14 @@ export class Login implements OnInit {
     private readonly router: Router,
   ) {}
 
+  // If the user is already logged in, take them straight to home.
   ngOnInit(): void {
     if (localStorage.getItem('currentUser')) {
       this.router.navigate(['/home']);
     }
   }
 
+  // Send the entered email and password to the Node server.
   login(): void {
     this.http
       .post<AuthResponse>(this.authUrl, {
@@ -43,12 +46,14 @@ export class Login implements OnInit {
       })
       .subscribe({
         next: (response) => {
+          // If the response is invalid, show an error and clear any stale session.
           if (!response.valid) {
             localStorage.removeItem('currentUser');
             this.errorMessage = 'Invalid email or password';
             return;
           }
 
+          // Store the valid user details in localStorage without the password.
           const currentUser = {
             username: response.username ?? '',
             birthdate: response.birthdate ?? '',
