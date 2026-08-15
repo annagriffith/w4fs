@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ type AuthResponse = {
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
+export class Login implements OnInit {
   email = '';
   password = '';
   errorMessage = '';
@@ -28,6 +28,12 @@ export class Login {
     private readonly http: HttpClient,
     private readonly router: Router,
   ) {}
+
+  ngOnInit(): void {
+    if (localStorage.getItem('currentUser')) {
+      this.router.navigate(['/home']);
+    }
+  }
 
   login(): void {
     this.http
@@ -53,7 +59,7 @@ export class Login {
 
           localStorage.setItem('currentUser', JSON.stringify(currentUser));
           this.errorMessage = '';
-          this.router.navigate(['/profile']);
+          this.router.navigate(['/home']);
         },
         error: () => {
           localStorage.removeItem('currentUser');

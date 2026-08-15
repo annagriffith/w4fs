@@ -10,6 +10,10 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 export class App {
   constructor(private readonly router: Router) {}
 
+  get isLoggedIn(): boolean {
+    return localStorage.getItem('currentUser') !== null;
+  }
+
   logout(event: Event): void {
     event.preventDefault();
     localStorage.removeItem('currentUser');
