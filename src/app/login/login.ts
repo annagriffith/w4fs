@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-type LoginUser = {
+type AuthResponse = {
+  username?: string;
+  birthdate?: string;
+  age?: number;
   email: string;
-  password: string;
+  valid: boolean;
 };
 
 @Component({
@@ -18,25 +22,43 @@ export class Login {
   password = '';
   errorMessage = '';
 
-  users: LoginUser[] = [
-    { email: 'user1@email.com', password: 'password1' },
-    { email: 'user2@email.com', password: 'password2' },
-    { email: 'user3@email.com', password: 'password3' },
-  ];
+  private readonly authUrl = 'http://localhost:3001/api/auth';
 
-  constructor(private readonly router: Router) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly router: Router,
+  ) {}
 
   login(): void {
-    const matchedUser = this.users.find(
-      (user) => user.email === this.email && user.password === this.password,
-    );
+    this.http
+      .post<AuthResponse>(this.authUrl, {
+        email: this.email,
+        password: this.password,
+      })
+      .subscribe({
+        next: (response) => {
+          if (!response.valid) {
+            localStorage.removeItem('currentUser');
+            this.errorMessage = 'Invalid email or password';
+            return;
+          }
 
-    if (matchedUser) {
-      this.errorMessage = '';
-      this.router.navigate(['/profile']);
-      return;
-    }
+          const currentUser = {
+            username: response.username ?? '',
+            birthdate: response.birthdate ?? '',
+            age: response.age ?? 0,
+            email: response.email,
+            valid: true,
+          };
 
-    this.errorMessage = 'Invalid email or password.';
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+          this.errorMessage = '';
+          this.router.navigate(['/profile']);
+        },
+        error: () => {
+          localStorage.removeItem('currentUser');
+          this.errorMessage = 'Invalid email or password';
+        },
+      });
   }
 }

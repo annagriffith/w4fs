@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +8,11 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   styleUrl: './app.css',
 })
 export class App {
+  constructor(private readonly router: Router) {}
+
+  logout(event: Event): void {
+    event.preventDefault();
+    localStorage.removeItem('currentUser');
+    this.router.navigate(['/login']);
+  }
 }
