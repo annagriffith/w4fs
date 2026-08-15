@@ -1,9 +1,72 @@
-<div class="text-center">
-	<h1 class="h3 mb-3">ProfilePage</h1>
-	<img
-		src="/profile-placeholder.svg"
-		alt="Profile placeholder"
-		class="img-fluid rounded"
-		style="max-width: 320px"
-	/>
+<div class="row justify-content-center">
+	<div class="col-12 col-md-8 col-lg-6">
+		<div class="card">
+			<div class="card-body">
+				<h1 class="h3 mb-3">ProfilePage</h1>
+
+				<img
+					src="/profile-placeholder.svg"
+					alt="Profile placeholder"
+					class="img-fluid rounded mb-3"
+					style="max-width: 320px"
+				/>
+
+				<form (ngSubmit)="saveProfile()">
+					<div class="mb-3">
+						<label for="username" class="form-label">Username</label>
+						<input
+							id="username"
+							name="username"
+							type="text"
+							class="form-control"
+							[(ngModel)]="username"
+							required
+						/>
+					</div>
+
+					<div class="mb-3">
+						<label for="birthdate" class="form-label">Birthdate</label>
+						<input
+							id="birthdate"
+							name="birthdate"
+							type="date"
+							class="form-control"
+							[(ngModel)]="birthdate"
+							required
+						/>
+					</div>
+
+					<div class="mb-3">
+						<label for="age" class="form-label">Age</label>
+						<input
+							id="age"
+							name="age"
+							type="number"
+							class="form-control"
+							[(ngModel)]="age"
+							required
+						/>
+					</div>
+
+					<div class="mb-3">
+						<label for="email" class="form-label">Email</label>
+						<input
+							id="email"
+							name="email"
+							type="email"
+							class="form-control"
+							[(ngModel)]="email"
+							required
+						/>
+					</div>
+
+					<button type="submit" class="btn btn-primary">Save Profile</button>
+				</form>
+
+				@if (successMessage) {
+					<div class="alert alert-success mt-3" role="alert">{{ successMessage }}</div>
+				}
+			</div>
+		</div>
+	</div>
 </div>
