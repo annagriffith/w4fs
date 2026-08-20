@@ -1,59 +1,53 @@
-# W4fs
+# Workshop 4 and Workshop 5 Angular Project
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.4.
+This project is a simple Angular app with login, profile editing, and protected pages.
 
-## Development server
-
-To start a local development server, run:
+## Workshop 4 commands used
 
 ```bash
+ng new week4
+npm install bootstrap --save
+ng generate component home
+ng generate component login
+ng generate component profile
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Workshop 5 updates
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+A `server` folder was added to the project to handle authentication.
 
 ```bash
-ng generate component component-name
+cd server
+npm init
+npm install express cors
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+To start the backend server:
 
 ```bash
-ng generate --help
+cd server
+npm start
 ```
 
-## Building
-
-To build the project run:
+To start the Angular app:
 
 ```bash
-ng build
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Project features
 
-## Running unit tests
+- Login form sends the email and password to `/api/auth`
+- A valid user is checked against a fixed array of users
+- The logged-in user is stored in `localStorage`
+- The profile page loads the current user and allows editing
+- Protected pages use an AuthGuard
+- Logout clears the current user and redirects back to login
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Example valid login
 
-```bash
-ng test
+```text
+Email: anna@student.edu
+Password: anna123
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
