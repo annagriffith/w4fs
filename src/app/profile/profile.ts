@@ -23,13 +23,15 @@ export class Profile implements OnInit {
   valid = false;
   successMessage = '';
 
-  // Load the current user's details from localStorage when the page opens.
+  // load user details when profile page opens
   ngOnInit(): void {
+    // get current user from local storage
     const storedUser = localStorage.getItem('currentUser');
     if (!storedUser) {
       return;
     }
 
+    // convert stored string back to user object
     const currentUser = JSON.parse(storedUser) as CurrentUser;
     this.username = currentUser.username;
     this.birthdate = currentUser.birthdate;
@@ -38,7 +40,6 @@ export class Profile implements OnInit {
     this.valid = currentUser.valid;
   }
 
-  // Save the edited profile back into localStorage.
   saveProfile(): void {
     const updatedUser: CurrentUser = {
       username: this.username,
@@ -48,7 +49,9 @@ export class Profile implements OnInit {
       valid: this.valid,
     };
 
+    // save updated profile back to local storage
     localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+    // show message after profile is updated
     this.successMessage = 'Profile updated successfully.';
   }
 }

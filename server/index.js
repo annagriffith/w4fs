@@ -4,6 +4,7 @@ const cors = require('cors');
 const app = express();
 const PORT = 3001;
 
+// user structure for the test users
 class User {
   constructor(username, birthdate, age, email, password, valid) {
     this.username = username;
@@ -15,26 +16,33 @@ class User {
   }
 }
 
+// test users for login
 const users = [
   new User('Anna Griffith', '2001-04-17', 25, 'anna@student.edu', 'anna123', true),
   new User('Liam Cooper', '1999-11-02', 26, 'liam@student.edu', 'liam123', true),
   new User('Mia Patel', '2002-07-28', 24, 'mia@student.edu', 'mia123', true),
 ];
 
+// allow requests from angular app
 app.use(cors());
+// read JSON data sent from angular
 app.use(express.json());
 
+// login API route
 app.post('/api/auth', (req, res) => {
   const { email, password } = req.body;
 
+  // find user with matching email and password
   const matchedUser = users.find(
     (user) => user.email === email && user.password === password,
   );
 
   if (!matchedUser) {
+    // invalid login
     return res.json({ valid: false });
   }
 
+  // send user details without password
   return res.json({
     username: matchedUser.username,
     birthdate: matchedUser.birthdate,
@@ -44,6 +52,7 @@ app.post('/api/auth', (req, res) => {
   });
 });
 
+// start node server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

@@ -1,15 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
-type AuthResponse = {
-  username?: string;
-  birthdate?: string;
-  age?: number;
-  email: string;
-  valid: boolean;
-};
+import { Auth } from '../services/auth';
+import { Loginrequest, LoginResponse } from '../interfaces/loginrequest';
 
 @Component({
   selector: 'app-login',
@@ -22,38 +16,35 @@ export class Login implements OnInit {
   password = '';
   errorMessage = '';
 
-  // Backend endpoint for authentication.
-  private readonly authUrl = 'http://localhost:3001/api/auth';
+  private readonly auth = inject(Auth);
+  private readonly router = inject(Router);
 
-  constructor(
-    private readonly http: HttpClient,
-    private readonly router: Router,
-  ) {}
-
-  // If the user is already logged in, take them straight to home.
+  // go to home if already logged in
   ngOnInit(): void {
     if (localStorage.getItem('currentUser')) {
       this.router.navigate(['/home']);
     }
   }
 
-  // Send the entered email and password to the Node server.
   login(): void {
-    this.http
-      .post<AuthResponse>(this.authUrl, {
+    // send login details to server
+    const credentials: Loginrequest = {
         email: this.email,
         password: this.password,
-      })
+    };
+
+    this.auth
+      .login(credentials)
       .subscribe({
-        next: (response) => {
-          // If the response is invalid, show an error and clear any stale session.
+        next: (response: LoginResponse) => {
+          // check if login was successful
           if (!response.valid) {
             localStorage.removeItem('currentUser');
             this.errorMessage = 'Invalid email or password';
             return;
           }
 
-          // Store the valid user details in localStorage without the password.
+          // save logged in user without password
           const currentUser = {
             username: response.username ?? '',
             birthdate: response.birthdate ?? '',
@@ -62,12 +53,15 @@ export class Login implements OnInit {
             valid: true,
           };
 
+          // convert user object to string for local storage
           localStorage.setItem('currentUser', JSON.stringify(currentUser));
           this.errorMessage = '';
+          // go to home page after login
           this.router.navigate(['/home']);
         },
         error: () => {
           localStorage.removeItem('currentUser');
+          // show error if login is wrong
           this.errorMessage = 'Invalid email or password';
         },
       });
